@@ -1,5 +1,6 @@
 package com.eduardo.ControleEstoque.Controller;
 
+import com.eduardo.ControleEstoque.DTO.CategoriaDTO;
 import com.eduardo.ControleEstoque.Model.Categoria;
 import com.eduardo.ControleEstoque.Service.CategoriaService;
 import lombok.Getter;
@@ -20,22 +21,22 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<Categoria> cadastrarCategoria(@RequestBody Categoria categoria) {
-        Categoria novaCategoria = categoriaService.cadastrarCategoria(categoria);
+    public ResponseEntity<CategoriaDTO> cadastrarCategoria(@RequestBody CategoriaDTO categoriaDTO) {
+        CategoriaDTO novaCategoria = categoriaService.cadastrarCategoria(categoriaDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(novaCategoria);
     }
 
     @GetMapping
-    public ResponseEntity<List<Categoria>> listarCategorias() {
-        List<Categoria> listaCategorias = categoriaService.listarCategorias();
+    public ResponseEntity<List<CategoriaDTO>> listarCategorias() {
+        List<CategoriaDTO> listaCategorias = categoriaService.listarCategorias();
         return ResponseEntity.ok()
                 .body(listaCategorias);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Categoria> listarCategoriaPorId(@PathVariable Long id){
-       Categoria categoriaPorId = categoriaService.listarCategoriaPorId(id);
+    public ResponseEntity<CategoriaDTO> listarCategoriaPorId(@PathVariable Long id){
+        CategoriaDTO categoriaPorId = categoriaService.listarCategoriaPorId(id);
         return ResponseEntity.ok()
                 .body(categoriaPorId);
     }
@@ -47,9 +48,9 @@ public class CategoriaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> atualizarCategoria(@PathVariable Long id,
-                                                        @RequestBody Categoria categoria) {
-        Categoria categoriaAtualizada = categoriaService.atualizarCategoria(id, categoria);
+    public ResponseEntity<CategoriaDTO> atualizarCategoria(@PathVariable Long id,
+                                                        @RequestBody CategoriaDTO categoriaDTO) {
+        CategoriaDTO categoriaAtualizada = categoriaService.atualizarCategoria(id, categoriaDTO);
         return ResponseEntity.ok()
                 .body(categoriaAtualizada);
     }

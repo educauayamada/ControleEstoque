@@ -1,12 +1,12 @@
 package com.eduardo.ControleEstoque.Service;
 
+import com.eduardo.ControleEstoque.DTO.CategoriaDTO;
 import com.eduardo.ControleEstoque.Exception.CategoriaNotFoundException;
 import com.eduardo.ControleEstoque.Model.Categoria;
 import com.eduardo.ControleEstoque.Repository.CategoriaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoriaService {
@@ -17,18 +17,38 @@ public class CategoriaService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public Categoria cadastrarCategoria(Categoria categoria) {
-        return categoriaRepository.save(categoria);
+    public CategoriaDTO cadastrarCategoria(CategoriaDTO categoriaDTO) {
+        Categoria categoria = new Categoria();
+
+        categoria.setNome(categoriaDTO.nome());
+        Categoria categoriaSalva = categoriaRepository.save(categoria);
+
+        return new CategoriaDTO (
+                categoriaSalva.getId(),
+                categoriaSalva.getNome()
+        );
+
+
+     }
+
+    public List<CategoriaDTO> listarCategorias(){
+        return categoriaRepository.findAll()
+                .stream()
+                .map(c -> new CategoriaDTO(
+                        c.getId(),
+                        c.getNome()
+                ))
+                .toList();
     }
 
-    public List<Categoria> listarCategorias(){
-        return categoriaRepository.findAll();
-    }
-
-    public Categoria listarCategoriaPorId(Long id) {
+    public CategoriaDTO listarCategoriaPorId(Long id) {
 
         return categoriaRepository.findById(id)
-                .orElseThrow(() -> new CategoriaNotFoundException("Categoria não encontrada."));
+                .map(c -> new CategoriaDTO(
+                        c.getId(),
+                        c.getNome()
+                ))
+                .orElseThrow(() -> new CategoriaNotFoundException("Categoria não encontrada"));
 
     }
 
@@ -38,10 +58,17 @@ public class CategoriaService {
         categoriaRepository.delete(categoriaEntity);
     }
 
-    public Categoria atualizarCategoria(Long id, Categoria categoria) {
-        Categoria categoriaEntity = categoriaRepository.findById(id)
-            .orElseThrow(() -> new CategoriaNotFoundException("Categoria não encontrada."));
-        categoriaEntity.setNome(categoria.getNome());
-        return categoriaRepository.save(categoriaEntity);
+    public CategoriaDTO atualizarCategoria(Long id, CategoriaDTO categoriaDTO) {
+            Categoria categoriaEntity = categoriaRepository.findById(id)
+                    .orElseThrow(() -> new CategoriaNotFoundException("Categoria não encontrada."));
+
+            categoriaEntity.setNome(categoriaDTO.nome());
+            Categoria categoriaAtualizada = categoriaRepository.save(categoriaEntity);
+
+            return new CategoriaDTO(
+                    categoriaAtualizada.getId(),
+                    categoriaAtualizada.getNome()
+            );
+
     }
 }
