@@ -1,6 +1,7 @@
 package com.eduardo.ControleEstoque.Controller;
 
-import com.eduardo.ControleEstoque.Model.Produto;
+import com.eduardo.ControleEstoque.DTO.ProdutoDTO;
+import com.eduardo.ControleEstoque.DTO.ProdutoUpdateDTO;
 import com.eduardo.ControleEstoque.Service.ProdutoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,18 +13,16 @@ import java.util.List;
 @RequestMapping("/produtos")
 public class ProdutoController {
 
-    ProdutoService produtoService;
+    private final ProdutoService produtoService;
 
     public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
     }
 
     @PostMapping
-    public ResponseEntity<Produto> cadastrarProduto (@RequestBody Produto produto) {
+    public ResponseEntity<ProdutoDTO> cadastrarProduto (@RequestBody ProdutoDTO produto) {
 
-        Long idCategoria = produto.getCategoria().getId();
-
-        Produto novoProduto = produtoService.cadastrarProduto(produto, idCategoria);
+        ProdutoDTO novoProduto = produtoService.cadastrarProduto(produto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(novoProduto);
@@ -31,9 +30,9 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Produto>> listarProdutos() {
+    public ResponseEntity<List<ProdutoDTO>> listarProdutos() {
 
-        List<Produto> produtoList = produtoService.listarProdutos();
+        List<ProdutoDTO> produtoList = produtoService.listarProdutos();
 
         return ResponseEntity.ok()
                 .body(produtoList);
@@ -41,9 +40,9 @@ public class ProdutoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> listarProdutoPorId(@PathVariable Long id) {
+    public ResponseEntity<ProdutoDTO> listarProdutoPorId(@PathVariable Long id) {
 
-        Produto produtoId = produtoService.listarProdutoPorId(id);
+        ProdutoDTO produtoId = produtoService.listarProdutoPorId(id);
 
         return ResponseEntity.ok()
                 .body(produtoId);
@@ -60,9 +59,9 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> atualizarProdutoPorId( @PathVariable Long id,
-                                                          @RequestBody Produto produto) {
-       Produto produtoAtualizado = produtoService.atualizarProdutoPorId(id, produto);
+    public ResponseEntity<ProdutoDTO> atualizarProdutoPorId(@PathVariable Long id,
+                                                            @RequestBody ProdutoUpdateDTO produto) {
+        ProdutoDTO produtoAtualizado = produtoService.atualizarProdutoPorId(id, produto);
 
        return ResponseEntity.ok()
                .body(produtoAtualizado);
