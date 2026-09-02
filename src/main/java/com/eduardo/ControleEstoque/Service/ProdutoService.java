@@ -116,6 +116,25 @@ public class ProdutoService {
                         produtoAtualizado.getCategoria().getNome()
                 )
         );
+
+    }
+
+    public List<ProdutoDTO> listarProdutosEstoqueBaixo(int limite){
+
+        return produtoRepository.findByQuantidadeLessThanEqual(limite)
+                .stream()
+                .map(p -> new ProdutoDTO(
+                        p.getId(),
+                        p.getNome(),
+                        p.getPreco(),
+                        p.getQuantidade(),
+                        new CategoriaDTO(
+                                p.getCategoria().getId(),
+                                p.getCategoria().getNome()
+                        )
+                ))
+                .toList();
+
     }
 
 }

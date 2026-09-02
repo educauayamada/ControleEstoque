@@ -3,6 +3,7 @@ package com.eduardo.ControleEstoque.Controller;
 import com.eduardo.ControleEstoque.DTO.ProdutoDTO;
 import com.eduardo.ControleEstoque.DTO.ProdutoUpdateDTO;
 import com.eduardo.ControleEstoque.Service.ProdutoService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,6 +66,16 @@ public class ProdutoController {
 
        return ResponseEntity.ok()
                .body(produtoAtualizado);
+    }
+
+    @GetMapping("/estoque-baixo")
+    public ResponseEntity<List<ProdutoDTO>> listarProdutosEstoqueBaixo(@RequestParam int limite){
+
+        List<ProdutoDTO> listaProdutos = produtoService.listarProdutosEstoqueBaixo(limite);
+
+        return ResponseEntity.ok()
+                .body(listaProdutos);
+
     }
 
 }
