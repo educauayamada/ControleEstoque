@@ -137,4 +137,34 @@ public class ProdutoService {
 
     }
 
+    public List<ProdutoDTO> listarProdutosPorNome(String nome){
+
+        return produtoRepository.findByNomeContaining(nome)
+                .stream()
+                .map(p -> new ProdutoDTO(
+                        p.getId(),
+                        p.getNome(),
+                        p.getPreco(),
+                        p.getQuantidade(),
+                        new CategoriaDTO(
+                                p.getCategoria().getId(),
+                                p.getCategoria().getNome()
+                        )
+                ))
+                .toList();
+
+    }
+
+    public List<ProdutoDTO> listarProdutos(String nome){
+
+        if(nome == null) {
+
+            return listarProdutos();
+
+        }
+
+        return listarProdutosPorNome(nome);
+
+    }
+
 }

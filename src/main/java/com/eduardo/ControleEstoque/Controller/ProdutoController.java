@@ -3,7 +3,6 @@ package com.eduardo.ControleEstoque.Controller;
 import com.eduardo.ControleEstoque.DTO.ProdutoDTO;
 import com.eduardo.ControleEstoque.DTO.ProdutoUpdateDTO;
 import com.eduardo.ControleEstoque.Service.ProdutoService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +30,12 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProdutoDTO>> listarProdutos() {
+    public ResponseEntity<List<ProdutoDTO>> listarProdutos(@RequestParam(required = false) String nome) {
 
-        List<ProdutoDTO> produtoList = produtoService.listarProdutos();
+        List<ProdutoDTO> produtoList = produtoService.listarProdutos(nome);
 
         return ResponseEntity.ok()
                 .body(produtoList);
-
     }
 
     @GetMapping("/{id}")
@@ -77,5 +75,4 @@ public class ProdutoController {
                 .body(listaProdutos);
 
     }
-
 }

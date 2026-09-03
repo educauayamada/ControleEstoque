@@ -12,4 +12,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     List<Produto> findByQuantidadeLessThanEqual (int limite);
 
+    List<Produto> findByNomeContaining (String nome);
+
 }
