@@ -3,6 +3,7 @@ package com.eduardo.ControleEstoque.Controller;
 import com.eduardo.ControleEstoque.DTO.MovimentacaoCreateDTO;
 import com.eduardo.ControleEstoque.DTO.MovimentacaoDTO;
 import com.eduardo.ControleEstoque.Service.MovimentacaoService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class MovimentacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<MovimentacaoDTO> registrarMovimentacao(@RequestBody MovimentacaoCreateDTO movimentacaoCreateDTO) {
+    public ResponseEntity<MovimentacaoDTO> registrarMovimentacao(@Valid @RequestBody MovimentacaoCreateDTO movimentacaoCreateDTO) {
 
         MovimentacaoDTO movimentacao = movimentacaoService.registrarMovimentacao(movimentacaoCreateDTO);
 

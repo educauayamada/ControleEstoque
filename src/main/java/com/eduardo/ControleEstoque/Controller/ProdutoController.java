@@ -3,6 +3,7 @@ package com.eduardo.ControleEstoque.Controller;
 import com.eduardo.ControleEstoque.DTO.ProdutoDTO;
 import com.eduardo.ControleEstoque.DTO.ProdutoUpdateDTO;
 import com.eduardo.ControleEstoque.Service.ProdutoService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<ProdutoDTO> cadastrarProduto (@RequestBody ProdutoDTO produto) {
+    public ResponseEntity<ProdutoDTO> cadastrarProduto (@Valid @RequestBody ProdutoDTO produto) {
 
         ProdutoDTO novoProduto = produtoService.cadastrarProduto(produto);
 

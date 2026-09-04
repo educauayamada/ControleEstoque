@@ -3,6 +3,7 @@ package com.eduardo.ControleEstoque.Controller;
 import com.eduardo.ControleEstoque.DTO.CategoriaDTO;
 import com.eduardo.ControleEstoque.Model.Categoria;
 import com.eduardo.ControleEstoque.Service.CategoriaService;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +15,14 @@ import java.util.List;
 @RequestMapping("/categorias")
 public class CategoriaController {
 
-    final CategoriaService categoriaService;
+    private     final CategoriaService categoriaService;
 
     public CategoriaController(CategoriaService categoriaService) {
         this.categoriaService = categoriaService;
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaDTO> cadastrarCategoria(@RequestBody CategoriaDTO categoriaDTO) {
+    public ResponseEntity<CategoriaDTO> cadastrarCategoria(@Valid @RequestBody CategoriaDTO categoriaDTO) {
         CategoriaDTO novaCategoria = categoriaService.cadastrarCategoria(categoriaDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(novaCategoria);
