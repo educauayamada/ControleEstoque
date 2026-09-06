@@ -4,7 +4,6 @@ import com.eduardo.ControleEstoque.DTO.ErroResponse;
 import com.eduardo.ControleEstoque.Exception.CategoriaNotFoundException;
 import com.eduardo.ControleEstoque.Exception.EstoqueInsuficienteException;
 import com.eduardo.ControleEstoque.Exception.ProdutoNotFoundException;
-import com.eduardo.ControleEstoque.Exception.QuantidadeInvalidaException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,13 +31,6 @@ public class GlobalExceptionHandler{
 
     @ExceptionHandler(EstoqueInsuficienteException.class)
     private ResponseEntity<ErroResponse> estoqueInsuficienteException(EstoqueInsuficienteException exception) {
-
-        return criarErro(HttpStatus.BAD_REQUEST, exception.getMessage());
-
-    }
-
-    @ExceptionHandler(QuantidadeInvalidaException.class)
-    private ResponseEntity<ErroResponse> quantidadeInvalidaException(QuantidadeInvalidaException exception){
 
         return criarErro(HttpStatus.BAD_REQUEST, exception.getMessage());
 
