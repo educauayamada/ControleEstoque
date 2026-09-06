@@ -11,8 +11,8 @@
 	<groupId>com.eduardo</groupId>
 	<artifactId>ControleEstoque</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>ControleEstoque</name>
+	<description>API REST para gerenciamento de estoque</description>
 	<url/>
 	<licenses>
 		<license/>
