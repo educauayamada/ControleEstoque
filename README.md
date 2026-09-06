@@ -10,7 +10,6 @@ API REST para gerenciamento de **produtos, categorias e movimentações de estoq
 * PostgreSQL
 * Flyway
 * Maven
-* Lombok
 * Bean Validation
 
 ## O que foi estudado
