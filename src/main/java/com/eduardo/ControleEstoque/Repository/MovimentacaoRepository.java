@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface MovimentacaoRepository extends JpaRepository<Movimentacao, Long> {
 
-    List<Movimentacao> findByProduto_Id(Long produtoId);
+    List<Movimentacao> findByProduto_IdOrderByDataHoraDesc(Long produtoId);
 
 }

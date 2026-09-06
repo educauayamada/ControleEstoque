@@ -92,7 +92,7 @@ public class MovimentacaoService {
         produtoRepository.findById(produtoId)
                 .orElseThrow(() -> new ProdutoNotFoundException("Produto não encontrado."));
 
-        return movimentacaoRepository.findByProduto_Id(produtoId)
+        return movimentacaoRepository.findByProduto_IdOrderByDataHoraDesc(produtoId)
                 .stream()
                 .map(m -> new MovimentacaoDTO(
                         m.getId(),
