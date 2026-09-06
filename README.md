@@ -2,6 +2,9 @@
 
 API REST para gerenciamento de **produtos, categorias e movimentações de estoque**, desenvolvida com Java e Spring Boot.
 
+## Objetivo
+Projeto desenvolvido para colocar em prática conceitos de desenvolvimento backend e construir uma aplicação com regras de negócio além de um CRUD básico.
+
 ## Tecnologias
 
 * Java 17
