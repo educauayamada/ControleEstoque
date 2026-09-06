@@ -1,6 +1,5 @@
 package com.eduardo.ControleEstoque.Service;
 
-import com.eduardo.ControleEstoque.DTO.CategoriaDTO;
 import com.eduardo.ControleEstoque.DTO.ProdutoDTO;
 import com.eduardo.ControleEstoque.DTO.ProdutoUpdateDTO;
 import com.eduardo.ControleEstoque.Exception.CategoriaNotFoundException;
@@ -9,8 +8,8 @@ import com.eduardo.ControleEstoque.Model.Categoria;
 import com.eduardo.ControleEstoque.Model.Produto;
 import com.eduardo.ControleEstoque.Repository.CategoriaRepository;
 import com.eduardo.ControleEstoque.Repository.ProdutoRepository;
+import com.eduardo.ControleEstoque.infra.mapper.ProdutoMapper;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -18,10 +17,12 @@ public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
     private final CategoriaRepository categoriaRepository;
+    private final ProdutoMapper produtoMapper;
 
-    public ProdutoService(ProdutoRepository produtoRepository, CategoriaRepository categoriaRepository) {
+    public ProdutoService(ProdutoRepository produtoRepository, CategoriaRepository categoriaRepository, ProdutoMapper produtoMapper) {
         this.produtoRepository = produtoRepository;
         this.categoriaRepository = categoriaRepository;
+        this.produtoMapper = produtoMapper;
     }
 
     public ProdutoDTO cadastrarProduto(ProdutoDTO produtoDTO) {
@@ -38,49 +39,21 @@ public class ProdutoService {
 
         Produto produtoSalvo = produtoRepository.save(produto);
 
-        return new ProdutoDTO(
-                produtoSalvo.getId(),
-                produtoSalvo.getNome(),
-                produtoSalvo.getPreco(),
-                produtoSalvo.getQuantidade(),
-                new CategoriaDTO(
-                        produtoSalvo.getCategoria().getId(),
-                        produtoSalvo.getCategoria().getNome()
-                )
-        );
+        return produtoMapper.toDTO(produtoSalvo);
     }
 
     public List<ProdutoDTO> listarProdutos() {
         return produtoRepository.findAll()
                 .stream()
-                .map(p -> new ProdutoDTO(
-                        p.getId(),
-                        p.getNome(),
-                        p.getPreco(),
-                        p.getQuantidade(),
-                        new CategoriaDTO(
-                                p.getCategoria().getId(),
-                                p.getCategoria().getNome()
-                        )
-                ))
+                .map(produtoMapper::toDTO)
                 .toList();
     }
 
     public ProdutoDTO listarProdutoPorId(Long id) {
 
         return produtoRepository.findById(id)
-                .map(p -> new ProdutoDTO(
-                        p.getId(),
-                        p.getNome(),
-                        p.getPreco(),
-                        p.getQuantidade(),
-                        new CategoriaDTO(
-                                p.getCategoria().getId(),
-                                p.getCategoria().getNome()
-                        )
-                ))
+                .map(produtoMapper::toDTO)
                 .orElseThrow(() -> new ProdutoNotFoundException("Produto não encontrado."));
-
     }
 
     public void deletarProdutoPorId(Long id) {
@@ -106,16 +79,7 @@ public class ProdutoService {
         produtoEntity.setCategoria(categoria);
         Produto produtoAtualizado = produtoRepository.save(produtoEntity);
 
-        return new ProdutoDTO(
-                produtoAtualizado.getId(),
-                produtoAtualizado.getNome(),
-                produtoAtualizado.getPreco(),
-                produtoAtualizado.getQuantidade(),
-                new CategoriaDTO(
-                        produtoAtualizado.getCategoria().getId(),
-                        produtoAtualizado.getCategoria().getNome()
-                )
-        );
+        return produtoMapper.toDTO(produtoAtualizado);
 
     }
 
@@ -123,16 +87,7 @@ public class ProdutoService {
 
         return produtoRepository.findByQuantidadeLessThanEqual(limite)
                 .stream()
-                .map(p -> new ProdutoDTO(
-                        p.getId(),
-                        p.getNome(),
-                        p.getPreco(),
-                        p.getQuantidade(),
-                        new CategoriaDTO(
-                                p.getCategoria().getId(),
-                                p.getCategoria().getNome()
-                        )
-                ))
+                .map(produtoMapper::toDTO)
                 .toList();
 
     }
@@ -141,16 +96,7 @@ public class ProdutoService {
 
         return produtoRepository.findByNomeContaining(nome)
                 .stream()
-                .map(p -> new ProdutoDTO(
-                        p.getId(),
-                        p.getNome(),
-                        p.getPreco(),
-                        p.getQuantidade(),
-                        new CategoriaDTO(
-                                p.getCategoria().getId(),
-                                p.getCategoria().getNome()
-                        )
-                ))
+                .map(produtoMapper::toDTO)
                 .toList();
 
     }

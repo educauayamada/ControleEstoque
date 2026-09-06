@@ -4,12 +4,12 @@ import com.eduardo.ControleEstoque.DTO.MovimentacaoCreateDTO;
 import com.eduardo.ControleEstoque.DTO.MovimentacaoDTO;
 import com.eduardo.ControleEstoque.Exception.EstoqueInsuficienteException;
 import com.eduardo.ControleEstoque.Exception.ProdutoNotFoundException;
-import com.eduardo.ControleEstoque.Exception.QuantidadeInvalidaException;
 import com.eduardo.ControleEstoque.Model.Movimentacao;
 import com.eduardo.ControleEstoque.Model.Produto;
 import com.eduardo.ControleEstoque.Model.TipoMovimentacao;
 import com.eduardo.ControleEstoque.Repository.MovimentacaoRepository;
 import com.eduardo.ControleEstoque.Repository.ProdutoRepository;
+import com.eduardo.ControleEstoque.infra.mapper.MovimentacaoMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,21 +21,19 @@ public class MovimentacaoService {
 
     private final ProdutoRepository produtoRepository;
     private final MovimentacaoRepository movimentacaoRepository;
+    private final MovimentacaoMapper movimentacaoMapper;
 
-    public MovimentacaoService(ProdutoRepository produtoRepository, MovimentacaoRepository movimentacaoRepository) {
+    public MovimentacaoService(ProdutoRepository produtoRepository, MovimentacaoRepository movimentacaoRepository, MovimentacaoMapper movimentacaoMapper) {
         this.produtoRepository = produtoRepository;
         this.movimentacaoRepository = movimentacaoRepository;
+        this.movimentacaoMapper = movimentacaoMapper;
     }
 
     @Transactional
-    public MovimentacaoDTO registrarMovimentacao (MovimentacaoCreateDTO movimentacaoCreateDTO) {
+    public MovimentacaoDTO registrarMovimentacao(MovimentacaoCreateDTO movimentacaoCreateDTO) {
 
         Produto produto = produtoRepository.findById(movimentacaoCreateDTO.produtoId())
                 .orElseThrow(() -> new ProdutoNotFoundException("Produto não encontrado."));
-
-        if (movimentacaoCreateDTO.quantidade() <= 0) {
-            throw new QuantidadeInvalidaException("A quantidade deve ser maior que zero.");
-        }
 
         if (movimentacaoCreateDTO.tipoMovimentacao() == TipoMovimentacao.ENTRADA) {
             produto.setQuantidade(
@@ -43,13 +41,13 @@ public class MovimentacaoService {
 
         } else if (movimentacaoCreateDTO.tipoMovimentacao() == TipoMovimentacao.SAIDA) {
 
-            if(produto.getQuantidade() < movimentacaoCreateDTO.quantidade()) {
+            if (produto.getQuantidade() < movimentacaoCreateDTO.quantidade()) {
                 throw new EstoqueInsuficienteException("Estoque Insuficiente.");
             }
-                produto.setQuantidade(
+
+            produto.setQuantidade(
                         produto.getQuantidade() - movimentacaoCreateDTO.quantidade()
                 );
-
         }
 
         produtoRepository.save(produto);
@@ -62,28 +60,14 @@ public class MovimentacaoService {
 
         movimentacaoRepository.save(movimentacao);
 
-        return new MovimentacaoDTO(
-                movimentacao.getId(),
-                movimentacao.getProduto().getId(),
-                movimentacao.getQuantidade(),
-                movimentacao.getTipoMovimentacao(),
-                movimentacao.getDataHora()
-        );
+        return movimentacaoMapper.toDTO(movimentacao);
     }
 
     public List<MovimentacaoDTO> listarMovimentacoes() {
 
         return movimentacaoRepository.findAll()
                 .stream()
-                .map(
-                        m -> new MovimentacaoDTO(
-                                m.getId(),
-                                m.getProduto().getId(),
-                                m.getQuantidade(),
-                                m.getTipoMovimentacao(),
-                                m.getDataHora()
-                        )
-                )
+                .map(movimentacaoMapper::toDTO)
                 .toList();
     }
 
@@ -94,13 +78,7 @@ public class MovimentacaoService {
 
         return movimentacaoRepository.findByProduto_IdOrderByDataHoraDesc(produtoId)
                 .stream()
-                .map(m -> new MovimentacaoDTO(
-                        m.getId(),
-                        m.getProduto().getId(),
-                        m.getQuantidade(),
-                        m.getTipoMovimentacao(),
-                        m.getDataHora()
-                ))
+                .map(movimentacaoMapper::toDTO)
                 .toList();
     }
 }

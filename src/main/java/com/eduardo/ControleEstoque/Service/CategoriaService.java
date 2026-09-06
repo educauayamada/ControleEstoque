@@ -4,6 +4,7 @@ import com.eduardo.ControleEstoque.DTO.CategoriaDTO;
 import com.eduardo.ControleEstoque.Exception.CategoriaNotFoundException;
 import com.eduardo.ControleEstoque.Model.Categoria;
 import com.eduardo.ControleEstoque.Repository.CategoriaRepository;
+import com.eduardo.ControleEstoque.infra.mapper.CategoriaMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,10 +12,12 @@ import java.util.List;
 @Service
 public class CategoriaService {
 
-    final CategoriaRepository categoriaRepository;
+    private final CategoriaRepository categoriaRepository;
+    private final CategoriaMapper categoriaMapper;
 
-    public CategoriaService(CategoriaRepository categoriaRepository) {
+    public CategoriaService(CategoriaRepository categoriaRepository, CategoriaMapper categoriaMapper) {
         this.categoriaRepository = categoriaRepository;
+        this.categoriaMapper = categoriaMapper;
     }
 
     public CategoriaDTO cadastrarCategoria(CategoriaDTO categoriaDTO) {
@@ -23,31 +26,20 @@ public class CategoriaService {
         categoria.setNome(categoriaDTO.nome());
         Categoria categoriaSalva = categoriaRepository.save(categoria);
 
-        return new CategoriaDTO (
-                categoriaSalva.getId(),
-                categoriaSalva.getNome()
-        );
-
-
+        return categoriaMapper.toDTO(categoriaSalva);
      }
 
     public List<CategoriaDTO> listarCategorias(){
         return categoriaRepository.findAll()
                 .stream()
-                .map(c -> new CategoriaDTO(
-                        c.getId(),
-                        c.getNome()
-                ))
+                .map(categoriaMapper::toDTO)
                 .toList();
     }
 
     public CategoriaDTO listarCategoriaPorId(Long id) {
 
         return categoriaRepository.findById(id)
-                .map(c -> new CategoriaDTO(
-                        c.getId(),
-                        c.getNome()
-                ))
+                .map(categoriaMapper::toDTO)
                 .orElseThrow(() -> new CategoriaNotFoundException("Categoria não encontrada"));
 
     }
@@ -65,10 +57,7 @@ public class CategoriaService {
             categoriaEntity.setNome(categoriaDTO.nome());
             Categoria categoriaAtualizada = categoriaRepository.save(categoriaEntity);
 
-            return new CategoriaDTO(
-                    categoriaAtualizada.getId(),
-                    categoriaAtualizada.getNome()
-            );
+            return categoriaMapper.toDTO(categoriaAtualizada);
 
     }
 }
